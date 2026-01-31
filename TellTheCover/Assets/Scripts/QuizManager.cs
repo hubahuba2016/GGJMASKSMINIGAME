@@ -2,16 +2,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement; // For reloading scene
 
 public class QuizManager : MonoBehaviour
 {
     public TMP_Text questionText;
     public TMP_Text resultText;
+    public GameObject quitbutton;
+    public GameObject tryagainbutton;
 
     List<MaskData> masks = new List<MaskData>();
     List<Question> questions = new List<Question>();
 
     string correctAnswer;
+
+      // Call this for "Try Again"
+    public void TryAgain()
+    {
+        // Reload current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // Call this for "Quit"
+    public void QuitGame()
+    {
+        Debug.Log("Quit pressed!");
+        Application.Quit();
+    }
+
+    void Update()
+    {
+        // Press Escape to quit
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitGame();
+        }
+    }
 
     void Start()
     {
@@ -57,33 +83,80 @@ public class QuizManager : MonoBehaviour
     }
 
     void CreateQuestions()
-    {
-        questions.Add(new Question {
-            text = "Which mask has 3 horns?",
-            condition = m => m.horns == 3
-        });
+{
+    questions.Add(new Question {
+        text = "Which mask has 3 horns?",
+        condition = m => m.horns == 3
+    });
 
-        questions.Add(new Question {
-            text = "Which mask has white fangs?",
-            condition = m => m.fangs
-        });
+    questions.Add(new Question {
+        text = "Which mask has white fangs?",
+        condition = m => m.fangs
+    });
 
-        questions.Add(new Question {
-            text = "Which mask has 3 mouths?",
-            condition = m => m.mouths == 3
-        });
+    questions.Add(new Question {
+        text = "Which mask has 3 mouths?",
+        condition = m => m.mouths == 3
+    });
 
-        questions.Add(new Question {
-            text = "Which mask has yellow eyes?",
-            condition = m => m.eyeColor == "yellow"
-        });
+    questions.Add(new Question {
+        text = "Which mask has yellow eyes?",
+        condition = m => m.eyeColor == "yellow"
+    });
 
-        // Trick question
-        questions.Add(new Question {
-            text = "Which mask has 4 eyes?",
-            condition = m => m.eyes == 4
-        });
-    }
+    // Trick question
+    questions.Add(new Question {
+        text = "Which mask has 4 eyes?",
+        condition = m => m.eyes == 4
+    });
+
+    // More questions
+    questions.Add(new Question {
+        text = "Which mask has no horns?",
+        condition = m => m.horns == 0
+    });
+
+    questions.Add(new Question {
+        text = "Which mask is bald?",
+        condition = m => m.bald
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has exactly 1 nose?",
+        condition = m => m.noses == 1
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has more than 2 eyes?",
+        condition = m => m.eyes > 2
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has no fangs?",
+        condition = m => !m.fangs
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has exactly 2 horns?",
+        condition = m => m.horns == 2
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has white eyes and no horns?",
+        condition = m => m.eyeColor == "white" && m.horns == 0
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has 0 mouths?",
+        condition = m => m.mouths == 0
+    });
+
+    questions.Add(new Question {
+        text = "Which mask has yellow eyes and 3 horns?",
+        condition = m => m.eyeColor == "yellow" && m.horns == 3
+    });
+}
+
 
    void GenerateQuestion()
     {
@@ -109,10 +182,16 @@ public class QuizManager : MonoBehaviour
     public void Answer(string answer)
     {
         if (answer == correctAnswer)
+        {
             resultText.text = "Correct!";
+            quitbutton.SetActive(true);
+            tryagainbutton.SetActive(true);
+        }
         else
+        {
             resultText.text = "Wrong!";
-
-        Invoke(nameof(GenerateQuestion), 1.2f);
+            quitbutton.SetActive(true);
+            tryagainbutton.SetActive(true);
+        }
     }
 }
