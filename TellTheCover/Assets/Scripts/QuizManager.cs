@@ -10,6 +10,8 @@ public class QuizManager : MonoBehaviour
     public TMP_Text resultText;
     public GameObject quitbutton;
     public GameObject tryagainbutton;
+    public Button[] optionButtons;
+
 
     List<MaskData> masks = new List<MaskData>();
     List<Question> questions = new List<Question>();
@@ -178,20 +180,30 @@ public class QuizManager : MonoBehaviour
         else
             correctAnswer = matches[0].maskName;
     }
-
     public void Answer(string answer)
+{
+    if (answer == correctAnswer)
     {
-        if (answer == correctAnswer)
-        {
-            resultText.text = "Correct!";
-            quitbutton.SetActive(true);
-            tryagainbutton.SetActive(true);
-        }
-        else
-        {
-            resultText.text = "Wrong!";
-            quitbutton.SetActive(true);
-            tryagainbutton.SetActive(true);
-        }
+        resultText.text = "Correct!";
     }
+    else
+    {
+        resultText.text = "Wrong!";
+    }
+
+    quitbutton.SetActive(true);
+    tryagainbutton.SetActive(true);
+
+    HideOptionButtons();
+}
+
+
+void HideOptionButtons()
+{
+    foreach (Button btn in optionButtons)
+    {
+        btn.gameObject.SetActive(false); // completely disappears
+    }
+}
+
 }
